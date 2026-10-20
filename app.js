@@ -7,10 +7,13 @@ import morgan from "morgan";
 import tracksRouter from "#api/tracks";
 import playlistsRouter from "#api/playlists";
 import userRouter from "#api/users";
+import getUserFromToken from "#/middleware/getUserFromToken";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
+
+app.use(getUserFromToken);
 
 app.use("/users", userRouter);
 app.use("/tracks", tracksRouter);

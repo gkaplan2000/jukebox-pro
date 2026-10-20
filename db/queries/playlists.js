@@ -18,12 +18,13 @@ export async function createPlaylist(name, description, owner_id) {
   return playlist;
 }
 
-export async function getPlaylists() {
+export async function getPlaylists(owner_id) {
   const sql = `
   SELECT *
   FROM playlists
+  WHERE owner_id = $1
   `;
-  const { rows: playlists } = await db.query(sql);
+  const { rows: playlists } = await db.query(sql, [owner_id]);
   return playlists;
 }
 
@@ -38,3 +39,19 @@ export async function getPlaylistById(id) {
   } = await db.query(sql, [id]);
   return playlist;
 }
+
+export async function getPlaylistsWithTrackWithOwner(track_id, owner_id) {
+  const sql = `
+  SELECT playlists.*
+  FROM playlists
+  JOIN playlists_tracks ON playlists.id = playlists_tracks.playlist_id
+  WHERE playlists_tracks.track_id = $1
+  AND playlists.owner_id = $2
+  `;
+  const {
+    rows: playlists,
+  } = await db.query(sql, [track_id, owner_id]);
+  return playlists;
+}
+
+
